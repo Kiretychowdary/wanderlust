@@ -1,0 +1,65 @@
+<% layout("/layouts/boilerplate") %>
+
+  <body>
+    <h3>Create a New Listing</h3>
+    <form method="POST" action="/listings/new" enctype="multipart/form-data" class="needs-validation" novalidate>
+      <div class="mb-4">
+        <input type="text" class="form-control" name="listing[title]" placeholder="Enter title" required>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please provide a valid title.</div>
+      </div>
+
+      <div class="mb-4">
+        <textarea name="listing[description]" class="form-control" placeholder="Enter description" required></textarea>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please provide a valid description.</div>
+      </div>
+
+      <!-- <div class="mb-4">
+        <input name="listing[image]" class="form-control" placeholder="Enter image URL/Link" type="url" required>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please provide a valid image URL/Link.</div>
+      </div> -->
+      <div class="mb-4">
+        <input name="listing[image]" class="form-control" placeholder="Enter image URL/Link" type="file">
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please provide a valid image URL/Link.</div>
+      </div>
+
+      <div class="mb-4">
+        <input name="listing[price]" class="form-control" placeholder="Enter price" type="number" required>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please provide a valid price.</div>
+      </div>
+
+      <div class="mb-4">
+        <input name="listing[country]" class="form-control" placeholder="Enter country" type="text" required>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please provide a valid country.</div>
+      </div>
+
+      <div class="mb-4">
+        <input name="listing[location]" class="form-control" placeholder="Enter location" type="text" required>
+        <div class="valid-feedback">Looks good!</div>
+        <div class="invalid-feedback">Please provide a valid location.</div>
+      </div>
+
+      <button class="btn btn-primary" type="submit">Submit form</button>
+    </form>
+
+    <script>
+      (() => {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+          form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+          }, false);
+        });
+      })();
+    </script>
+  </body>

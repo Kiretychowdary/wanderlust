@@ -1,0 +1,180 @@
+<% layout("/layouts/boilerplate") %>
+
+    <script>
+        const coordinates = <%- JSON.stringify(post.geometry.coordinates) %>;
+        console.log(coordinates);
+    </script>
+
+    <div class="row">
+        <div class="col-8 offset-2">
+            <div class="card listing-card col-6 offset-3">
+                <img src="<%= post.image.url %>" class="card-img-top mt-3 show-img" alt="list">
+                <div class="card-body">
+                    <h5>Owner of the Post: <i>
+                            <%= post.owner.username %>
+                        </i></h5>
+                    <b>
+                        <%= post.title %>
+                    </b><br>
+                    <%= post.price %><br>
+                        <%= post.location %><br>
+                            <%= post.country %><br>
+                </div>
+
+                <% if (currentUser && currentUser._id.equals(post.owner._id)) { %>
+                    <div class="btns">
+                        <a class="btn btn-dark offset-2" href="/listings/<%= post._id %>/edit">Edit</a>
+                        <form action="/listings" class="ml-3">
+                            <button class="btn btn-dark">OK</button>
+                        </form>
+                    </div>
+                    <% } %>
+            </div>
+        </div>
+
+        <div class="col-8 offset-2 mt-4">
+            <% if (currentUser) { %>
+                <h4>Give a Review</h4>
+                <form action="/reviews/listings/<%= post._id %>/reviews" method="POST" class="needs-validation"
+                    novalidate>
+                    <div class="mb-3">
+                        <label for="rating" class="form-label">Rating</label>
+                        <input type="range" class="form-range" name="review[rating]" min="1" max="5" id="rating"
+                            required>
+                        <div class="invalid-feedback">Please provide a rating between 1 and 5.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="comment" class="form-label">Comment</label>
+                        <textarea class="form-control" name="review[comment]" id="comment" required></textarea>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please provide a comment.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                </form>
+                <hr />
+                <% } %>
+
+                    <% if (post.review.length> 0) { %>
+                        <div class="reviews">
+                            <h4>Reviews</h4>
+                            <div class="row">
+                                <% for (let review of post.review) { %>
+                                    <div class="card col-6 mb-3">
+                                        <div class="card-body mr-3">
+                                            <p class="card-text">
+                                                <%= review.author.username %>
+                                            </p>
+                                            <p class="card-text">
+                                                <%= '★' .repeat(review.rating) + '☆' .repeat(5 - review.rating) %>
+                                            </p>
+                                            <p class="card-text">
+                                                <%= review.comment %>
+                                            </p>
+                                        </div>
+                                        <form
+                                            action="/reviews/listings/<%= post._id %>/reviews/<%= review._id %>?_method=DELETE"
+                                            method="POST" class="mb-3">
+                                            <button class="btn btn-sm btn-dark">Delete</button>
+                                        </form>
+                                    </div>
+                                    <% } %>
+                            </div>
+                        </div>
+                        <% } %>
+
+                            <div class="col-8 offset-3 mb-3">
+                                <h3>Where you'll be</h3>
+                                <div  id="map"></div>
+                                <!-- <p> <%=JSON.stringify(post.geometry.coordinates) %></p> -->
+                            </div>
+        </div>
+    </div>
+
+    <script>
+        // const coordinates = <%- JSON.stringify(post.geometry.coordinates) %>;
+
+
+        let mapToken = "<%= process.env.MAP_TOKEN %>";
+        mapboxgl.accessToken = mapToken;
+
+        const map = new mapboxgl.Map({
+            container: 'map',
+            center: coordinates,
+            zoom: 10,
+            pitch: 62,
+            bearing: -20
+        });
+
+        // const marker = new mapboxgl.Marker()
+        //     .setLngLat(coordinates)
+        //     .addTo(map);
+
+        map.on('style.load', () => {
+            map.addSource('line', {
+                type: 'geojson',
+                lineMetrics: true,
+                data: {
+                    type: 'LineString',
+                    coordinates: [
+                        [2.293389857555951, 48.85896319631851],
+                        [2.2890810326441624, 48.86174223718291]
+                    ]
+                }
+            });
+
+            map.addLayer({
+                id: 'line',
+                source: 'line',
+                type: 'line',
+                paint: {
+                    'line-width': 12,
+                    'line-emissive-strength': 0.8,
+                    'line-gradient': [
+                        'interpolate',
+                        ['linear'],
+                        ['line-progress'],
+                        0, 'red',
+                        1, 'blue'
+                    ]
+                }
+            });
+        });
+
+        document.getElementById('lightPreset')?.addEventListener('change', function () {
+            map.setConfigProperty('basemap', 'lightPreset', this.value);
+        });
+
+        document.querySelectorAll('.map-overlay-inner input[type="checkbox"]').forEach((checkbox) => {
+            checkbox.addEventListener('change', function () {
+                map.setConfigProperty('basemap', this.id, this.checked);
+            });
+        });
+
+        (() => {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+
+                const inputs = form.querySelectorAll('input, textarea, select')
+                inputs.forEach(input => {
+                    input.addEventListener('input', () => {
+                        if (input.checkValidity()) {
+                            input.classList.add('is-valid')
+                            input.classList.remove('is-invalid');
+                        } else {
+                            input.classList.add('is-invalid')
+                            input.classList.remove('is-valid')
+                        }
+                    })
+                })
+            })
+        })();
+    </script>

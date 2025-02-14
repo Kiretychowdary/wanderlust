@@ -1,0 +1,24 @@
+<!-- <% layout("/layouts/boilerplate")%> -->
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+ </head>
+ <body>
+    <form method="POST" action="/listings">
+        <input type="text" name="listings[title]">
+        <br>
+        <input type="text" name="listings[Description]" >
+        <br>
+        <input type="text" name="listings[image]" >
+        <br>
+        <input type="number" name="listings[price]" >
+        <br>
+        <input type="text" name="listings[location]" >
+        <br>
+        <button>Add</button>
+    </form>
+ </body>
+ </html>
