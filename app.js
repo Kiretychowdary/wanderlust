@@ -10,7 +10,7 @@ const mongoose = require("mongoose");
 const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("passport");
-const LocalStrategy = require("passport-local");  // ✅ Fixed typo
+const LocalStrategy = require("passport-local");
 const Listing = require("./models/listing.js");
 const User = require("./models/user.js");
 const wrapAsync = require("./utils/wrapAsync.js");
@@ -19,30 +19,33 @@ const { listingSchema, reviewSchema } = require("./schema.js");
 const listingRoutes = require("./routers/listing.js");
 const reviewRoutes = require("./routers/review.js");
 const userRoutes = require("./routers/user.js");
-const MongoStore = require('connect-mongo');
+const MongoStore = require("connect-mongo");
+
 const app = express();
 
-// ✅ Use environment variable for MongoDB URL
-// const MONGO_URL = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/wanderlust";
+// ✅ Debug MongoDB URL
+console.log("MongoDB URL:", process.env.MONGO_URL);
 
-const db=process.env.MONGO_URL
-
+const db = process.env.MONGO_URL;
 
 const store = MongoStore.create({
-    mongoUrl: process.env.MONGO_URL,
+    mongoUrl: db,
     crypto: {
-        secret: 'squirrel'
+        secret: "squirrel",
     },
-    touchAfter: 24 * 3600
+    touchAfter: 24 * 3600,
 });
-store.on("error",()=>{
-    console.log(err)
-})
+
+// ✅ Fix error handling in store
+store.on("error", (err) => {
+    console.log("MongoStore Error:", err);
+});
 
 // ✅ Connect to MongoDB
-mongoose.connect(db)
+mongoose
+    .connect(db)
     .then(() => console.log("✅ Connected to MongoDB"))
-    .catch(err => console.log("❌ MongoDB Connection Error:", err));
+    .catch((err) => console.log("❌ MongoDB Connection Error:", err));
 
 // ✅ Set View Engine
 app.set("view engine", "ejs");
@@ -58,12 +61,12 @@ app.use(methodOverride("_method"));
 const sessionOptions = {
     store,
     secret: "ILOVERADHAKRISHNA",
-    saveUninitialized: true,   // ✅ Fixed typo
+    saveUninitialized: false,
     resave: false,
     cookie: {
         expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 1 Week
         maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: true,  // Security: Prevents XSS attacks
+        httpOnly: true, // Security: Prevents XSS attacks
     },
 };
 app.use(session(sessionOptions));
@@ -80,7 +83,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
     res.locals.successMsg = req.flash("success");
     res.locals.errorMsg = req.flash("error");
-    res.locals.currentUser = req.user;  // ✅ Ensure currentUser is available
+    res.locals.currentUser = req.user;
     next();
 });
 
@@ -94,20 +97,22 @@ app.all("*", (req, res, next) => {
     next(new ExpressError(404, "Page Not Found"));
 });
 
-// ✅ Error Handling Middleware (Improved)
+// ✅ Error Handling Middleware
 app.use((err, req, res, next) => {
     const { statusCode = 500, message = "Something went wrong!" } = err;
     if (res.headersSent) return next(err);
-
-    console.error(err.stack);  // ✅ Log error for debugging
+    console.error(err.stack);
     res.status(statusCode).render("error.ejs", { message, statusCode });
 });
 
 // ✅ Start Server
 const PORT = process.env.PORT || 8090;
-
-
-app.listen(8090, () => {
+app.listen(PORT, () => {
     console.log("radhakrishnaloveuuuuumapemrnlatyyyyyyuuuuuuuu");
-    console.log(`Server running on port 8090`);
+    console.log(`Server running on port ${PORT}`);
 });
+
+// app.listen(8090, () => {
+//     console.log("radhakrishnaloveuuuuumapemrnlatyyyyyyuuuuuuuu");
+//     console.log(`Server running on port 8090`);
+// });
