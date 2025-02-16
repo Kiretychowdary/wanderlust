@@ -5,7 +5,7 @@
             <div class="col-8 offset-2">
                 <h3>Edit The Listings</h3>
 
-                <form method="POST" class="needs-validation" novalidate
+                <form method="POST" class="needs-validation" enctype="multipart/form-data" novalidate
                     action="/listings/<%=post._id%>/edit?_method=PUT">
                     <div class="mb-3">
                         <label class="form-label" for="title">Title: </label>
@@ -16,13 +16,15 @@
                         <input class="form-control" name="listing[description]" value="<%=post.description%>"
                             type="text">
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="image">Image: </label>
-                        <input class="form-control" value="<%=post.image.url%>" name="listing[image]" type="text" required>
+                    <div class="mb-4">
+                        <input name="listing[image]" class="form-control" placeholder="Enter image URL/Link"
+                            type="file">
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Please provide a valid image URL/Link.</div>
                     </div>
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <img src="<%=post.image.url%>" >
-                    </div>
+                    </div> -->
                     <div class="mb-3">
                         <label class="form-label" for="price">Price: </label>
                         <input class="form-control" value="<%=post.price%>" name="listing[price]" type="number"

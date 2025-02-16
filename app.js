@@ -1,6 +1,6 @@
-// RADHAKRISHNA❤️❤️❤️❤️
-// SHIVAPARVATHIVINAYAKA❤️❤️❤️❤️❤️❤️
-// SITARAMA❤️❤️❤️❤️❤️❤️
+// 🌟 Divine Blessings 🌟
+console.log("🔥 RADHAKRISHNA ❤️ | SHIVAPARVATHIVINAYAKA ❤️ | SITARAMA ❤️");
+
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
@@ -11,43 +11,47 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const MongoStore = require("connect-mongo");
+
+// Models & Utilities
 const Listing = require("./models/listing.js");
 const User = require("./models/user.js");
 const wrapAsync = require("./utils/wrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema, reviewSchema } = require("./schema.js");
+
+// Routers
 const listingRoutes = require("./routers/listing.js");
 const reviewRoutes = require("./routers/review.js");
 const userRoutes = require("./routers/user.js");
-const MongoStore = require("connect-mongo");
 
 const app = express();
 
-// ✅ Debug MongoDB URL
-console.log("MongoDB URL:", process.env.MONGO_URL);
-
+// ✅ Load MongoDB URL from Environment
 const db = process.env.MONGO_URL;
+if (!db) {
+    console.error("❌ MONGO_URL is missing! Set it in .env or environment variables.");
+    process.exit(1);
+}
 
+// ✅ Secure Session Store with MongoDB
 const store = MongoStore.create({
     mongoUrl: db,
-    crypto: {
-        secret: "squirrel",
-    },
-    touchAfter: 24 * 3600,
+    crypto: { secret: process.env.SESSION_SECRET || "fallbackSecret" },
+    touchAfter: 24 * 3600, // Reduce session updates
 });
-
-// ✅ Fix error handling in store
-store.on("error", (err) => {
-    console.log("MongoStore Error:", err);
-});
+store.on("error", (err) => console.error("❌ MongoStore Error:", err));
 
 // ✅ Connect to MongoDB
 mongoose
-    .connect(db)
+    .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("✅ Connected to MongoDB"))
-    .catch((err) => console.log("❌ MongoDB Connection Error:", err));
+    .catch((err) => {
+        console.error("❌ MongoDB Connection Error:", err.message);
+        process.exit(1);
+    });
 
-// ✅ Set View Engine
+// ✅ View Engine Configuration
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
@@ -60,7 +64,7 @@ app.use(methodOverride("_method"));
 // ✅ Session Configuration
 const sessionOptions = {
     store,
-    secret: "ILOVERADHAKRISHNA",
+    secret: process.env.SESSION_SECRET || "fallbackSecret",
     saveUninitialized: false,
     resave: false,
     cookie: {
@@ -108,11 +112,6 @@ app.use((err, req, res, next) => {
 // ✅ Start Server
 const PORT = process.env.PORT || 8090;
 app.listen(PORT, () => {
-    console.log("radhakrishnaloveuuuuumapemrnlatyyyyyyuuuuuuuu");
-    console.log(`Server running on port ${PORT}`);
+    console.log("🔥 RADHAKRISHNA LOVE UUUUU ❤️ MERN APP RUNNING SMOOTHLY!");
+    console.log(`🚀 Server running on port ${PORT}`);
 });
-
-// app.listen(8090, () => {
-//     console.log("radhakrishnaloveuuuuumapemrnlatyyyyyyuuuuuuuu");
-//     console.log(`Server running on port 8090`);
-// });

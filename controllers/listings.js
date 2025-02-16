@@ -48,7 +48,7 @@ module.exports.showForm = async (req, res) => {
     catch (er) {
 
     }
-    console.log(post)
+    // console.log(post)
     res.render("show.ejs", { post, currentUser });
 }
 
@@ -119,18 +119,45 @@ module.exports.createList = async (req, res) => {
     }
 };
 
+// module.exports.updateList = async (req, res) => {
+//     let { id } = req.params
+//     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+//     if (typeof reqfile != "undefined") {
+//         let url = req.file.path;
+//         let filename = req.file.filename
+//         listing.image = { url, filename }
+//         await listing.save();
+//     }
+//     req.flash("success", "Your Listing is updated");
+//     res.redirect(`/listings/${id}`);
+// }
 module.exports.updateList = async (req, res) => {
-    let { id } = req.params
-    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-    if (typeof reqfile != "undefined") {
-        let url = req.file.path;
-        let filename = req.file.filename
-        listing.image = { url, filename }
-        await listing.save();
+    try {
+        const { id } = req.params;
+        const { listing } = req.body;
+
+        // 🆙 Update listing details
+        let updatedListing = await Listing.findByIdAndUpdate(id, { ...listing }, { new: true });
+
+        // 🖼️ Update image only if a new one is uploaded
+        if (req.file) {
+            updatedListing.image = {
+                url: req.file.path,
+                filename: req.file.filename,
+            };
+        }
+        console.log(req.file);
+        await updatedListing.save();
+
+        req.flash("success", "Your listing has been updated!");
+        res.redirect(`/listings/${id}`);
+
+    } catch (error) {
+        console.error("❌ Error in updateList:", error);
+        req.flash("error", "Could not update listing. Please try again.");
+        res.redirect(`/listings/${id}/edit`);
     }
-    req.flash("success", "Your Listing is updated");
-    res.redirect(`/listings/${id}`);
-}
+};
 
 module.exports.createReview = async (req, res) => {
     let { id } = req.params;

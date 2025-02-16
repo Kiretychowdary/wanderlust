@@ -60,7 +60,7 @@ router.post("/new", isLoggedIn, upload.single('listing[image]'), wrapAsync(listi
 // ✅ Edit Listing Form
 router.get("/:id/edit", isLoggedIn, wrapAsync(listingControllers.editForm));
 // ✅ Update Listing
-router.put("/:id/edit", isLoggedIn, validateListing, wrapAsync(listingControllers.updateList));
+router.put("/:id/edit", isLoggedIn,  upload.single('listing[image]'),validateListing, wrapAsync(listingControllers.updateList));
 
 // ✅ Show a Specific Listing and Handle Reviews
 router.route("/:id")
