@@ -1,4 +1,4 @@
-<%- layout("layouts/boilerplate") %>
+<!-- <%- layout("layouts/boilerplate") %>
 
 
 <div class="row m-3">
@@ -19,4 +19,146 @@
             </div>
         </form>
     </div>
-</div>
+</div> -->
+
+
+
+<%- layout("layouts/boilerplate") %>
+
+    <style>
+        /* General font family */
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+        }
+
+        .form-box {
+            max-width: 350px;
+            background: #f1f7fe;
+            overflow: hidden;
+            border-radius: 16px;
+            color: #010101;
+            margin: auto;
+            padding: 20px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .title {
+            font-weight: bold;
+            font-size: 1.6rem;
+            color: #222222;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .form-container {
+            border-radius: 8px;
+            background-color: #fff;
+            padding: 15px;
+        }
+
+        .input {
+            background: none;
+            border: 1px solid #ddd;
+            outline: none;
+            height: 40px;
+            width: 100%;
+            font-size: 1rem;
+            padding: 8px 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .input:focus {
+            border-color: #0066ff;
+            box-shadow: 0px 0px 5px rgba(0, 102, 255, 0.4);
+        }
+
+        .form-section {
+            padding: 10px;
+            font-size: .85rem;
+            background-color: #e0ecfb;
+            text-align: center;
+        }
+
+        .form-section a {
+            font-weight: bold;
+            color: #0066ff;
+            transition: color .3s ease;
+            text-decoration: none;
+        }
+
+        .form-section a:hover {
+            color: #005ce6;
+            text-decoration: underline;
+        }
+
+        .form button {
+            background-color: #0066ff;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color .3s ease;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form button:hover {
+            background-color: #005ce6;
+            transform: scale(1.05);
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-wrapper {
+            display: none;
+        }
+
+        .form button:active {
+            transform: scale(0.97);
+        }
+    </style>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="form-box shadow-lg">
+                    <form action="/signup" method="POST" class="needs-validation" novalidate>
+                        <span class="title">Signup and Enjoy the Booking Room </span>
+                        <span class="subtitle">Create A new Acc With Unique Creadientials</span>
+                        <div class="form-container">
+                            <label for="username" class="form-label">Username</label>
+                            <!-- <input type="text" class="form-control input" placeholder="Full Name" required> -->
+                            <input type="text" name="username" placeholder="Enter User Name" class="form-control"
+                                id="username" required />
+                                <br>
+                            <!-- <input type="text" name="username" placeholder="Enter User Name" class="form-control input" id="username" required /> -->
+                            <!-- <input type="password" name="password" placeholder="Password" class="form-control input" id="password" required /> -->
+                            <!-- <input type="password" class="form-control input" placeholder="Password" required> -->
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" placeholder="Enter your Email" name="email" class="form-control" id="email" required /><br>
+                            <div class="valid-feedback">LookGood</div>
+                            <label for="password" class="form-label mt-4">Password</label>
+                            <input type="password" placeholder="Create A password" name="password" class="form-control" id="password" required />
+
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Signup</button>
+                    </form>
+                     
+                </div>
+            </div>
+        </div>
+    </div>
