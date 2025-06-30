@@ -90,7 +90,7 @@
 
 <script>
     const coordinates = <%- JSON.stringify(post.geometry.coordinates) %>;
-    let mapToken = "<%= process.env.MAP_TOKEN %>";
+    let mapToken = "pk.eyJ1IjoiMjIxZmEwNDExOCIsImEiOiJjbTM3ZGltb2gwZXVlMmpzZTR0cDV5ZnJrIn0.DzDCP7Md1pzCWDZLpzL9vg";
     mapboxgl.accessToken = mapToken;
 
     const map = new mapboxgl.Map({
