@@ -1,180 +1,135 @@
 <% layout("/layouts/boilerplate") %>
 
-    <script>
-        const coordinates = <%- JSON.stringify(post.geometry.coordinates) %>;
-        console.log(coordinates);
-    </script>
-
-    <div class="row">
-        <div class="col-8 offset-2">
-            <div class="card listing-card col-6 offset-3">
-                <img src="<%= post.image.url %>" class="card-img-top mt-3 show-img" alt="list">
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Listing Card -->
+            <div class="card shadow-lg mb-4 border-0">
+                <img src="<%= post.image.url %>" class="card-img-top" alt="Listing Image" style="object-fit:cover; max-height:350px;">
                 <div class="card-body">
-                    <h5>Owner of the Post: <i>
-                            <%= post.owner.username %>
-                        </i></h5>
-                    <b>
-                        <%= post.title %>
-                    </b><br>
-                    <%= post.price %><br>
-                        <%= post.location %><br>
-                            <%= post.country %><br>
-                </div>
-
-                <% if (currentUser && currentUser._id.equals(post.owner._id)) { %>
-                    <div class="btns">
-                        <a class="btn btn-dark offset-2" href="/listings/<%= post._id %>/edit">Edit</a>
-                        <form action="/listings" class="ml-3">
-                            <button class="btn btn-dark">OK</button>
-                        </form>
+                    <h2 class="card-title mb-2 fw-bold text-danger"><%= post.title %></h2>
+                    <h5 class="text-muted mb-3">by <span class="fw-bold"><%= post.owner.username %></span></h5>
+                    <div class="mb-2">
+                        <span class="badge bg-primary fs-6 me-2"><i class="fa-solid fa-location-dot"></i> <%= post.location %>, <%= post.country %></span>
+                        <span class="badge bg-success fs-6"><i class="fa-solid fa-tag"></i> ₹<%= post.price.toLocaleString("en-IN") %></span>
                     </div>
+                    <% if (currentUser && currentUser._id.equals(post.owner._id)) { %>
+                        <div class="mt-3 d-flex gap-2">
+                            <a class="btn btn-outline-primary" href="/listings/<%= post._id %>/edit"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+                            <a class="btn btn-outline-secondary" href="/listings"><i class="fa-solid fa-arrow-left"></i> Back</a>
+                        </div>
                     <% } %>
+                </div>
             </div>
-        </div>
 
-        <div class="col-8 offset-2 mt-4">
+            <!-- Review Form -->
             <% if (currentUser) { %>
-                <h4>Give a Review</h4>
-                <form action="/reviews/listings/<%= post._id %>/reviews" method="POST" class="needs-validation"
-                    novalidate>
-                    <div class="mb-3">
-                        <label for="rating" class="form-label">Rating</label>
-                        <input type="range" class="form-range" name="review[rating]" min="1" max="5" id="rating"
-                            required>
-                        <div class="invalid-feedback">Please provide a rating between 1 and 5.</div>
-                    </div>
+            <div class="card mb-4 shadow-sm border-0">
+                <div class="card-body">
+                    <h4 class="mb-3 text-danger"><i class="fa-solid fa-star me-1"></i>Leave a Review</h4>
+                    <form action="/reviews/listings/<%= post._id %>/reviews" method="POST" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="rating" class="form-label fw-semibold">Rating</label>
+                            <input type="range" class="form-range" name="review[rating]" min="1" max="5" id="rating" required>
+                            <div class="invalid-feedback">Please provide a rating between 1 and 5.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="comment" class="form-label fw-semibold">Comment</label>
+                            <textarea class="form-control" name="review[comment]" id="comment" required></textarea>
+                            <div class="valid-feedback">Looks good!</div>
+                            <div class="invalid-feedback">Please provide a comment.</div>
+                        </div>
+                        <button type="submit" class="btn btn-success mt-2"><i class="fa-solid fa-paper-plane me-1"></i>Submit</button>
+                    </form>
+                </div>
+            </div>
+            <% } %>
 
-                    <div class="mb-3">
-                        <label for="comment" class="form-label">Comment</label>
-                        <textarea class="form-control" name="review[comment]" id="comment" required></textarea>
-                        <div class="valid-feedback">Looks good!</div>
-                        <div class="invalid-feedback">Please provide a comment.</div>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
-                </form>
-                <hr />
-                <% } %>
-
-                    <% if (post.review.length> 0) { %>
-                        <div class="reviews">
-                            <h4>Reviews</h4>
-                            <div class="row">
-                                <% for (let review of post.review) { %>
-                                    <div class="card col-6 mb-3">
-                                        <div class="card-body mr-3">
-                                            <p class="card-text">
-                                                <%= review.author.username %>
-                                            </p>
-                                            <p class="card-text">
-                                                <%= '★' .repeat(review.rating) + '☆' .repeat(5 - review.rating) %>
-                                            </p>
-                                            <p class="card-text">
-                                                <%= review.comment %>
-                                            </p>
-                                        </div>
-                                        <form
-                                            action="/reviews/listings/<%= post._id %>/reviews/<%= review._id %>?_method=DELETE"
-                                            method="POST" class="mb-3">
-                                            <button class="btn btn-sm btn-dark">Delete</button>
-                                        </form>
+            <!-- Reviews Section -->
+            <% if (post.review.length > 0) { %>
+            <div class="card mb-4 shadow-sm border-0">
+                <div class="card-body">
+                    <h4 class="mb-3 text-danger"><i class="fa-solid fa-comments me-1"></i>Reviews</h4>
+                    <div class="row">
+                        <% for (let review of post.review) { %>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 bg-light shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fa-solid fa-user-circle fa-2x me-2 text-secondary"></i>
+                                        <span class="fw-bold"><%= review.author.username %></span>
                                     </div>
+                                    <div class="mb-2 text-warning fs-5">
+                                        <%= '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating) %>
+                                    </div>
+                                    <p class="card-text"><%= review.comment %></p>
+                                    <% if (currentUser && currentUser._id.equals(review.author._id)) { %>
+                                    <form action="/reviews/listings/<%= post._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                                        <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i> Delete</button>
+                                    </form>
                                     <% } %>
+                                </div>
                             </div>
                         </div>
                         <% } %>
+                    </div>
+                </div>
+            </div>
+            <% } %>
 
-                            <div class="col-8 offset-3 mb-3">
-                                <h3>Where you'll be</h3>
-                                <div  id="map"></div>
-                                <!-- <p> <%=JSON.stringify(post.geometry.coordinates) %></p> -->
-                            </div>
+            <!-- Map Section -->
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-body">
+                    <h4 class="mb-3 text-danger"><i class="fa-solid fa-map-location-dot me-1"></i>Where you'll be</h4>
+                    <div id="map" style="height: 350px; border-radius: 10px; overflow: hidden;"></div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // const coordinates = <%- JSON.stringify(post.geometry.coordinates) %>;
+<script>
+    const coordinates = <%- JSON.stringify(post.geometry.coordinates) %>;
+    let mapToken = "<%= process.env.MAP_TOKEN %>";
+    mapboxgl.accessToken = mapToken;
 
+    const map = new mapboxgl.Map({
+        container: 'map',
+        center: coordinates,
+        zoom: 10,
+        pitch: 62,
+        bearing: -20
+    });
 
-        let mapToken = "<%= process.env.MAP_TOKEN %>";
-        mapboxgl.accessToken = mapToken;
+    new mapboxgl.Marker({ color: "#ff385c" })
+        .setLngLat(coordinates)
+        .addTo(map);
 
-        const map = new mapboxgl.Map({
-            container: 'map',
-            center: coordinates,
-            zoom: 10,
-            pitch: 62,
-            bearing: -20
-        });
-
-        // const marker = new mapboxgl.Marker()
-        //     .setLngLat(coordinates)
-        //     .addTo(map);
-
-        map.on('style.load', () => {
-            map.addSource('line', {
-                type: 'geojson',
-                lineMetrics: true,
-                data: {
-                    type: 'LineString',
-                    coordinates: [
-                        [2.293389857555951, 48.85896319631851],
-                        [2.2890810326441624, 48.86174223718291]
-                    ]
+    // Bootstrap validation
+    (() => {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
                 }
-            });
+                form.classList.add('was-validated')
+            }, false)
 
-            map.addLayer({
-                id: 'line',
-                source: 'line',
-                type: 'line',
-                paint: {
-                    'line-width': 12,
-                    'line-emissive-strength': 0.8,
-                    'line-gradient': [
-                        'interpolate',
-                        ['linear'],
-                        ['line-progress'],
-                        0, 'red',
-                        1, 'blue'
-                    ]
-                }
-            });
-        });
-
-        document.getElementById('lightPreset')?.addEventListener('change', function () {
-            map.setConfigProperty('basemap', 'lightPreset', this.value);
-        });
-
-        document.querySelectorAll('.map-overlay-inner input[type="checkbox"]').forEach((checkbox) => {
-            checkbox.addEventListener('change', function () {
-                map.setConfigProperty('basemap', this.id, this.checked);
-            });
-        });
-
-        (() => {
-            'use strict'
-            const forms = document.querySelectorAll('.needs-validation')
-            Array.from(forms).forEach(form => {
-                form.addEventListener('submit', event => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
+            const inputs = form.querySelectorAll('input, textarea, select')
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    if (input.checkValidity()) {
+                        input.classList.add('is-valid')
+                        input.classList.remove('is-invalid');
+                    } else {
+                        input.classList.add('is-invalid')
+                        input.classList.remove('is-valid')
                     }
-                    form.classList.add('was-validated')
-                }, false)
-
-                const inputs = form.querySelectorAll('input, textarea, select')
-                inputs.forEach(input => {
-                    input.addEventListener('input', () => {
-                        if (input.checkValidity()) {
-                            input.classList.add('is-valid')
-                            input.classList.remove('is-invalid');
-                        } else {
-                            input.classList.add('is-invalid')
-                            input.classList.remove('is-valid')
-                        }
-                    })
                 })
             })
-        })();
-    </script>
+        })
+    })();
+</script>

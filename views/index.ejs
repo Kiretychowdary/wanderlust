@@ -1,199 +1,228 @@
 <% layout('layouts/boilerplate') -%>
 
-    <style>
-        /* Horizontal Scroll Bar */
-        #filters {
-            display: flex;
-            overflow-x: auto;
-            white-space: nowrap;
-            gap: 1rem;
-            height: 100px !important;
-            padding: 10px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
+<style>
+    /* Category Bar */
+    #filters {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        gap: 1rem;
+        height: 90px;
+        padding: 10px 0;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    #filters::-webkit-scrollbar { display: none; }
+    .filters {
+        text-align: center;
+        flex: 0 0 auto;
+        padding: 12px 18px;
+        border-radius: 10px;
+        background: #f8f9fa;
+        transition: all 0.2s;
+        opacity: 0.8;
+        font-weight: 500;
+        font-size: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        border: 1px solid transparent;
+    }
+    .filters i {
+        font-size: 1.6rem;
+        margin-bottom: 4px;
+        color: #ff385c;
+        transition: color 0.2s;
+    }
+    .filters:hover, .filters.active {
+        background: #ff385c;
+        color: #fff;
+        opacity: 1;
+        border: 1px solid #ff385c;
+    }
+    .filters:hover i, .filters.active i {
+        color: #fff;
+    }
+    .icons-navbar {
+        position: sticky;
+        top: 70px;
+        z-index: 100;
+        background: #fff;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        padding: 8px 0;
+    }
+    .scroll-btn {
+        background: none;
+        border: none;
+        font-size: 1.7rem;
+        color: #ff385c;
+        cursor: pointer;
+        padding: 0 12px;
+        transition: color 0.2s;
+    }
+    .scroll-btn:hover { color: #d81b60; }
+    .scroller-container {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 80px;
+    }
+    /* Listing Cards */
+    .listing-link {
+        text-decoration: none;
+        color: inherit;
+    }
+    .listing-card {
+        border: none;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+        transition: transform 0.18s, box-shadow 0.18s;
+        margin-bottom: 24px;
+        background: #fff;
+        position: relative;
+    }
+    .listing-card:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 12px 32px rgba(255,56,92,0.13);
+        z-index: 2;
+    }
+    .card-img-top {
+        height: 220px;
+        object-fit: cover;
+        border-radius: 18px 18px 0 0;
+        transition: filter 0.2s;
+    }
+    .listing-card:hover .card-img-top {
+        filter: brightness(0.93);
+    }
+    .love_icons {
+        position: absolute;
+        top: 14px;
+        right: 18px;
+        background: rgba(255,255,255,0.85);
+        border-radius: 50%;
+        padding: 8px;
+        z-index: 3;
+        color: #ff385c;
+        font-size: 1.3rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        transition: background 0.2s;
+    }
+    .love_icons:hover {
+        background: #ff385c;
+        color: #fff;
+    }
+    .card-body {
+        padding: 1rem 1.2rem 1.2rem 1.2rem;
+    }
+    .card-text {
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 0.2rem;
+    }
+    .listing-price {
+        color: #ff385c;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+    .listing-location {
+        color: #757575;
+        font-size: 0.98rem;
+        margin-bottom: 0.2rem;
+    }
+    .row1 {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
+    .listing-card {
+        width: 20rem;
+        min-width: 260px;
+        max-width: 100%;
+    }
+    @media (max-width: 768px) {
+        .row1 { gap: 1rem; }
+        .listing-card { width: 100%; }
+        .icons-navbar { top: 60px; }
+    }
+</style>
 
-        #filters::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* Individual Filter Items */
-        .filters {
-            text-align: center;
-            flex: 0 0 auto;
-            padding: 10px 15px;
-            border-radius: 10px;
-            background: #f4f4f4;
-            transition: all 0.3s ease-in-out;
-            opacity: 0.7;
-        }
-
-        .filters i {
-            font-size: 1.5rem;
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-        }
-
-        .filters:hover,
-        .filters.active {
-            background: #ff4500;
-            color: #fff;
-            opacity: 1;
-            cursor: pointer;
-        }
-
-        .icons-navbar {
-            position: sticky;
-            top: 80px;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            height: 100px;;
-            align-items: center;
-            padding: 10px;
-            background: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        /* Smooth Scroll Buttons */
-        .scroll-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 10px;
-        }
-
-        .scroll-btn:hover {
-            color: #ff4500;
-        }
-
-        .scroller-container {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            height: 80px;
-        }
-
-        .filters i {
-            position: relative;
-        }
-
-        .row {
-            width: 100vw;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            padding: 10px;
-            gap: 10px;
-        }
-    </style>
-
-    <div class="icons-navbar">
-        <div class="scroller-container">
-            <button class="scroll-btn" id="scroll-left">&#9665;</button>
-
-            <div id="filters">
-                <% const categories=[ { icon: "fa-fire" , label: "Trending" , id: "trending" }, { icon: "fa-bed" ,
-                    label: "Rooms" , id: "rooms" }, { icon: "fa-mountain-sun" , label: "Mountain" , id: "mountain" }, {
-                    icon: "fa-person-swimming" , label: "Pools" , id: "pools" }, { icon: "fa-water-ladder" ,
-                    label: "Ladders" , id: "ladders" }, { icon: "fa-person-skiing" , label: "Skiing" , id: "skiing" }, {
-                    icon: "fa-person-hiking" , label: "Hiking" , id: "hiking" }, { icon: "fa-person-walking-with-cane" ,
-                    label: "Walking Cane" , id: "cane" }, { icon: "fa-house-flood-water" , label: "Beach Resorts" ,
-                    id: "beach" } ]; %>
-
-                    <% for (let cat of categories) { %>
-                        <div class="filters" data-category="<%= cat.id %>">
-                            <i class="fa-solid <%= cat.icon %>"></i>
-                            <%= cat.label %>
-                        </div>
-                        <% } %>
-            </div>
-
-            <button class="scroll-btn" id="scroll-right">&#9655;</button>
-        </div>
-
-        <!-- <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-            <label class="form-check-label" for="flexSwitchCheckChecked">Show Taxes Before</label>
-        </div> -->
-    </div>
-
-
-
-    <!-- <div class="row row-cols-lg-3 row-cols-md-3 row-cols-sm-1"> -->
-    <div class="row1">
-        <% for (let post of lists) { %>
-            <a href="/listings/<%= post._id %>" class="listing-link">
-                <div class="card col listing-card" style="width: 20rem;">
-                    <img src="<%= post.image.url %>" class="card-img-top" alt="listings">
-                    <div class="card-img-overlay"></div>
-                    <div class="love_icons"><i class="fa-solid fa-heart"></i>
-                    </div>
-                    <div class="card-body">
-
-                        <p class="card-text">
-                            <%= post.title %><br />
-                                &#8377; <%= post.price.toLocaleString("en-IN") %>/ night
-                        </p>
-                    </div>
+<div class="icons-navbar">
+    <div class="scroller-container">
+        <button class="scroll-btn" id="scroll-left">&#9665;</button>
+        <div id="filters">
+            <% const categories=[
+                { icon: "fa-fire", label: "Trending", id: "trending" },
+                { icon: "fa-bed", label: "Rooms", id: "rooms" },
+                { icon: "fa-mountain-sun", label: "Mountain", id: "mountain" },
+                { icon: "fa-person-swimming", label: "Pools", id: "pools" },
+                { icon: "fa-water-ladder", label: "Ladders", id: "ladders" },
+                { icon: "fa-person-skiing", label: "Skiing", id: "skiing" },
+                { icon: "fa-person-hiking", label: "Hiking", id: "hiking" },
+                { icon: "fa-person-walking-with-cane", label: "Walking Cane", id: "cane" },
+                { icon: "fa-house-flood-water", label: "Beach Resorts", id: "beach" }
+            ]; %>
+            <% for (let cat of categories) { %>
+                <div class="filters" data-category="<%= cat.id %>">
+                    <i class="fa-solid <%= cat.icon %>"></i>
+                    <%= cat.label %>
                 </div>
-            </a>
             <% } %>
+        </div>
+        <button class="scroll-btn" id="scroll-right">&#9655;</button>
     </div>
-    <!-- <ul>
-            <% for (let post of lists) { %>
-                <p><a href="/listings/<%= post._id %>">
-                        <%= post.title %>
-                    </a></p>
-                <% } %>
-        </ul> -->
+</div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const filterContainer = document.getElementById("filters");
-            const scrollLeftBtn = document.getElementById("scroll-left");
-            const scrollRightBtn = document.getElementById("scroll-right");
+<div class="row1">
+    <% for (let post of lists) { %>
+        <a href="/listings/<%= post._id %>" class="listing-link">
+            <div class="card listing-card">
+                <img src="<%= post.image.url %>" class="card-img-top" alt="listings">
+                <div class="love_icons"><i class="fa-solid fa-heart"></i></div>
+                <div class="card-body">
+                    <div class="listing-location mb-1">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <%= post.location %>
+                    </div>
+                    <div class="card-text"><%= post.title %></div>
+                    <div class="listing-price">&#8377; <%= post.price.toLocaleString("en-IN") %> <span class="text-muted fs-6">/ night</span></div>
+                </div>
+            </div>
+        </a>
+    <% } %>
+</div>
 
-            function scrollLeftFunc() {
-                if (filterContainer) {
-                    filterContainer.scrollBy({ left: -200, behavior: "smooth" });
-                }
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const filterContainer = document.getElementById("filters");
+        const scrollLeftBtn = document.getElementById("scroll-left");
+        const scrollRightBtn = document.getElementById("scroll-right");
+
+        function scrollLeftFunc() {
+            if (filterContainer) {
+                filterContainer.scrollBy({ left: -200, behavior: "smooth" });
             }
-
-            function scrollRightFunc() {
-                if (filterContainer) {
-                    filterContainer.scrollBy({ left: 200, behavior: "smooth" });
-                }
+        }
+        function scrollRightFunc() {
+            if (filterContainer) {
+                filterContainer.scrollBy({ left: 200, behavior: "smooth" });
             }
+        }
+        if (scrollLeftBtn) scrollLeftBtn.addEventListener("click", scrollLeftFunc);
+        if (scrollRightBtn) scrollRightBtn.addEventListener("click", scrollRightFunc);
 
-            // Add event listeners only if buttons exist
-            if (scrollLeftBtn) scrollLeftBtn.addEventListener("click", scrollLeftFunc);
-            if (scrollRightBtn) scrollRightBtn.addEventListener("click", scrollRightFunc);
-
-            function updateScrollButtons() {
-                scrollLeftBtn.style.display = filterContainer.scrollLeft > 0 ? "block" : "none";
-                scrollRightBtn.style.display = filterContainer.scrollWidth > filterContainer.clientWidth + filterContainer.scrollLeft ? "block" : "none";
-            }
-
-            filterContainer.addEventListener("scroll", updateScrollButtons);
-            window.addEventListener("resize", updateScrollButtons);
-            updateScrollButtons();
-
-            // Lazy loading images
-            const images = document.querySelectorAll("img.lazyload");
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.src = entry.target.dataset.src;
-                        entry.target.classList.remove("lazyload");
-                    }
-                });
-            });
-
-            images.forEach(img => observer.observe(img));
-        });
-    </script>
+        function updateScrollButtons() {
+            scrollLeftBtn.style.display = filterContainer.scrollLeft > 0 ? "block" : "none";
+            scrollRightBtn.style.display = filterContainer.scrollWidth > filterContainer.clientWidth + filterContainer.scrollLeft ? "block" : "none";
+        }
+        filterContainer.addEventListener("scroll", updateScrollButtons);
+        window.addEventListener("resize", updateScrollButtons);
+        updateScrollButtons();
+    });
+</script>

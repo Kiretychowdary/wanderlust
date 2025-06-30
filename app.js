@@ -28,7 +28,7 @@ const userRoutes = require("./routers/user.js");
 const app = express();
 
 // ✅ Load MongoDB URL from Environment
-const db = process.env.MONGO_URL;
+const db = "mongodb+srv://radhakrishna:NMKRSPVLIDATA@cluster0.u71xq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 if (!db) {
     console.error("❌ MONGO_URL is missing! Set it in .env or environment variables.");
     process.exit(1);
@@ -43,14 +43,15 @@ const store = MongoStore.create({
 store.on("error", (err) => console.error("❌ MongoStore Error:", err));
 
 // ✅ Connect to MongoDB
+// ...existing code...
 mongoose
-    .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
+    .connect(db) // Remove useNewUrlParser and useUnifiedTopology
     .then(() => console.log("✅ Connected to MongoDB"))
     .catch((err) => {
         console.error("❌ MongoDB Connection Error:", err.message);
         process.exit(1);
     });
-
+// ...existing code...
 // ✅ View Engine Configuration
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -60,7 +61,7 @@ app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
-
+app.use(express.json());
 // ✅ Session Configuration
 const sessionOptions = {
     store,
@@ -96,18 +97,19 @@ app.use("/", userRoutes);
 app.use("/listings", listingRoutes);
 app.use("/reviews", reviewRoutes);
 
-// ✅ Handle 404 Errors
+// filepath: c:\Users\cheth\Downloads\wanderlust\app.js
 app.all("*", (req, res, next) => {
-    next(new ExpressError(404, "Page Not Found"));
+    next(new ExpressError("Page Not Found", 404));
 });
-
 // ✅ Error Handling Middleware
 app.use((err, req, res, next) => {
-    const { statusCode = 500, message = "Something went wrong!" } = err;
+    const statusCode = typeof err.statusCode === "number" ? err.statusCode : 500;
+    const message = err.message || "Something went wrong!";
     if (res.headersSent) return next(err);
-    console.error(err.stack);
     res.status(statusCode).render("error.ejs", { message, statusCode });
 });
+
+
 
 // ✅ Start Server
 const PORT = process.env.PORT || 8090;

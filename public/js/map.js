@@ -8,8 +8,8 @@ const map = new mapboxgl.Map({
     bearing: -20 // starting bearing
 });
 const marker = new mapboxgl.Marker()
-    .setLngLat([12.554729], [55.70651])
-    .addTo(map)
+    .setLngLat([77.6593, 27.5650]) // [lng, lat] for your map center or desired location
+    .addTo(map);
 
 map.on('style.load', () => {
     map.addSource('line', {

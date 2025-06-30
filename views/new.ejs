@@ -1,65 +1,80 @@
 <% layout("/layouts/boilerplate") %>
 
-  <body>
-    <h3>Create a New Listing</h3>
-    <form method="POST" action="/listings/new" enctype="multipart/form-data" class="needs-validation" novalidate>
-      <div class="mb-4">
-        <input type="text" class="form-control" name="listing[title]" placeholder="Enter title" required>
-        <div class="valid-feedback">Looks good!</div>
-        <div class="invalid-feedback">Please provide a valid title.</div>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="card shadow-lg border-0">
+        <div class="card-body p-4">
+          <h2 class="mb-4 text-center text-danger fw-bold">
+            <i class="fa-solid fa-plus me-2"></i>Create a New Listing
+          </h2>
+          <form method="POST" action="/listings" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <div class="mb-4">
+              <label class="form-label fw-semibold" for="title"><i class="fa-solid fa-heading me-1"></i>Title</label>
+              <input type="text" class="form-control" id="title" name="listing[title]" placeholder="Enter title" required>
+              <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Please provide a valid title.</div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold" for="description"><i class="fa-solid fa-align-left me-1"></i>Description</label>
+              <textarea name="listing[description]" id="description" class="form-control" placeholder="Enter description" required></textarea>
+              <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Please provide a valid description.</div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold" for="image"><i class="fa-solid fa-image me-1"></i>Image</label>
+           <input name="listing[image]" id="image" class="form-control" type="file" accept="image/*" required>
+              <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Please provide a valid image.</div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold" for="price"><i class="fa-solid fa-indian-rupee-sign me-1"></i>Price</label>
+              <input name="listing[price]" id="price" class="form-control" placeholder="Enter price" type="number" min="0" required>
+              <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Please provide a valid price.</div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold" for="country"><i class="fa-solid fa-earth-asia me-1"></i>Country</label>
+              <input name="listing[country]" id="country" class="form-control" placeholder="Enter country" type="text" required>
+              <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Please provide a valid country.</div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-semibold" for="location"><i class="fa-solid fa-location-dot me-1"></i>Location</label>
+              <input name="listing[location]" id="location" class="form-control" placeholder="Enter location" type="text" required>
+              <div class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Please provide a valid location.</div>
+            </div>
+
+            <div class="d-grid">
+              <button class="btn btn-danger btn-lg" type="submit">
+                <i class="fa-solid fa-paper-plane me-1"></i>Submit Listing
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
+    </div>
+  </div>
+</div>
 
-      <div class="mb-4">
-        <textarea name="listing[description]" class="form-control" placeholder="Enter description" required></textarea>
-        <div class="valid-feedback">Looks good!</div>
-        <div class="invalid-feedback">Please provide a valid description.</div>
-      </div>
-
-      <!-- <div class="mb-4">
-        <input name="listing[image]" class="form-control" placeholder="Enter image URL/Link" type="url" required>
-        <div class="valid-feedback">Looks good!</div>
-        <div class="invalid-feedback">Please provide a valid image URL/Link.</div>
-      </div> -->
-      <div class="mb-4">
-        <input name="listing[image]" class="form-control" placeholder="Enter image URL/Link" type="file">
-        <div class="valid-feedback">Looks good!</div>
-        <div class="invalid-feedback">Please provide a valid image URL/Link.</div>
-      </div>
-
-      <div class="mb-4">
-        <input name="listing[price]" class="form-control" placeholder="Enter price" type="number" required>
-        <div class="valid-feedback">Looks good!</div>
-        <div class="invalid-feedback">Please provide a valid price.</div>
-      </div>
-
-      <div class="mb-4">
-        <input name="listing[country]" class="form-control" placeholder="Enter country" type="text" required>
-        <div class="valid-feedback">Looks good!</div>
-        <div class="invalid-feedback">Please provide a valid country.</div>
-      </div>
-
-      <div class="mb-4">
-        <input name="listing[location]" class="form-control" placeholder="Enter location" type="text" required>
-        <div class="valid-feedback">Looks good!</div>
-        <div class="invalid-feedback">Please provide a valid location.</div>
-      </div>
-
-      <button class="btn btn-primary" type="submit">Submit form</button>
-    </form>
-
-    <script>
-      (() => {
-        'use strict';
-        const forms = document.querySelectorAll('.needs-validation');
-        Array.from(forms).forEach(form => {
-          form.addEventListener('submit', event => {
-            if (!form.checkValidity()) {
-              event.preventDefault();
-              event.stopPropagation();
-            }
-            form.classList.add('was-validated');
-          }, false);
-        });
-      })();
-    </script>
-  </body>
+<script>
+  (() => {
+    'use strict';
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+      form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  })();
+</script>

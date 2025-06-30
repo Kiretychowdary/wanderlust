@@ -1,3 +1,9 @@
+// NMRKSVIDATA
+//RADHAKRISHNAPERMANENT
+// SHIVAPARVATHIVINAYAKA
+
+const ExpressError = require("../utils/ExpressError");
+// VINAYAKAPERMANENT
 const Listing = require("../models/listing");
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const { listingSchema } = require("../schema");
@@ -5,7 +11,7 @@ const geocodingClient = mbxGeocoding({ accessToken: process.env.MAP_TOKEN })
 
 module.exports.index = async (req, res) => {
     let lists = await Listing.find({});
-    // console.log(post);
+  
     res.cookie("love", "RADHAKRISHNASHIVAPAVATHIVINAYAKA", { httpOnly: true });
     res.render("index.ejs", { lists });
 }
@@ -18,7 +24,7 @@ module.exports.editForm = async (req, res) => {
     let { id } = req.params;
     let post = await Listing.findById(id);
     let posts = await Listing.findById(id).populate({ path: "review" }).populate({ path: "owner" });
-    // console.log(posts)
+ 
     if (!post) {
         req.flash("error", "Cannot Find the Listing to Edit");
         return res.redirect("/listings/all");
@@ -35,7 +41,7 @@ module.exports.editForm = async (req, res) => {
 module.exports.showForm = async (req, res) => {
     let { id } = req.params;
     let post = await Listing.findById(id).populate({ path: "review", populate: { path: "author" } }).populate("owner");
-    // console.log(post.review);
+     
     if (!post) {
         req.flash("error", "Cannot Find the Listing");
         return res.redirect("/listings/all");
@@ -48,37 +54,16 @@ module.exports.showForm = async (req, res) => {
     catch (er) {
 
     }
-    // console.log(post)
+ 
     res.render("show.ejs", { post, currentUser });
 }
 
-// module.exports.createList = async (req, res) => {
 
-//     let response = await geocodingClient.forwardGeocode({
-//         query: 'Paris, France',
-//         limit: 2
-//     })
-//         .send();
-//     // res.send(response.body.features);
-//     let url = req.file.path;
-//     let filename = req.file.filename;
-//     // console.log(url," ",filename);
-//     const newListing = new Listing(req.body.listing);
-//     newListing.owner = req.user._id; // Link listing to logged-in user
-//     newListing.image = { url, filename };
-//     newListing.geometry = response.body.features[0].geometry;
-//     console.log(newListing.geometry)
-//     let result = await newListing.save();
-//     console.log(result);
-//     req.flash("success", "Successfully made a new listing!");
-
-//     res.redirect("/listings/all");
-// }
 module.exports.createList = async (req, res) => {
     try {
         const { listing } = req.body;
-
-        // Ensure the listing has a location
+        console.log(listing);
+        
         if (!listing.location || listing.location.trim() === "") {
             req.flash("error", "Location is required.");
             return res.redirect("/listings/new");
@@ -119,27 +104,16 @@ module.exports.createList = async (req, res) => {
     }
 };
 
-// module.exports.updateList = async (req, res) => {
-//     let { id } = req.params
-//     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-//     if (typeof reqfile != "undefined") {
-//         let url = req.file.path;
-//         let filename = req.file.filename
-//         listing.image = { url, filename }
-//         await listing.save();
-//     }
-//     req.flash("success", "Your Listing is updated");
-//     res.redirect(`/listings/${id}`);
-// }
+ 
 module.exports.updateList = async (req, res) => {
     try {
         const { id } = req.params;
         const { listing } = req.body;
 
-        // 🆙 Update listing details
+     
         let updatedListing = await Listing.findByIdAndUpdate(id, { ...listing }, { new: true });
 
-        // 🖼️ Update image only if a new one is uploaded
+      
         if (req.file) {
             updatedListing.image = {
                 url: req.file.path,

@@ -1,8 +1,9 @@
-class ExpressError extends Error{
-    constructor(statusCode,message){
-        super();
-        this.statusCode=statusCode;
-        this.message=message;
+//NMRKSPVLIDATAPERMANENT
+class ExpressError extends Error {
+    constructor(message, statusCode) {
+        super(message);
+        this.statusCode = statusCode;
     }
 }
-module.exports= ExpressError;
+
+module.exports = ExpressError;
